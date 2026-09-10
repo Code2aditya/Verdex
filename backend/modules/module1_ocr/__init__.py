@@ -23,6 +23,7 @@ from backend.modules.module1_ocr.field_extractor import (
 )
 from backend.modules.module1_ocr.mrz_parser import extract_mrz_lines
 from backend.modules.module1_ocr.ocr_engine import (
+    easy_available,
     lang_for_document_type,
     paddle_available,
     run_ocr,

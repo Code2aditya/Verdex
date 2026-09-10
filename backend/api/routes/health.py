@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends
 
 from backend.audit.chain import get_chain_root
 from backend.config.rule_loader import supported_document_types
-from backend.modules.module1_ocr import paddle_available
+from backend.modules.module1_ocr import easy_available, paddle_available
 from backend.modules.module2_validation import watchlist_status
 from backend.modules.module3_tampering.tamper_pipeline import _cnn_available
 from backend.security.offline_queue import OfflineQueue
@@ -20,12 +20,25 @@ router = APIRouter(tags=["System"])
 
 def _module_status() -> dict[str, str]:
     cnn = _cnn_available()
+    settings = get_settings()
+    if paddle_available():
+        ocr_status = "active (paddleocr)"
+    elif easy_available():
+        quant = "quantized" if settings.easyocr_quantize else "full"
+        ocr_status = f"active (easyocr {quant})"
+    else:
+        ocr_status = "degraded (no OCR engine installed)"
+    face_status = (
+        "active (insightface)"
+        if settings.enable_insightface
+        else "degraded (ENABLE_INSIGHTFACE=false — histogram fallback)"
+    )
     return {
-        "module1_ocr": "active" if paddle_available() else "degraded (paddleocr not installed)",
+        "module1_ocr": ocr_status,
         "module2_validation": "active",
         "module3_tamper": "active",
         "module3_cnn": "active" if cnn else "degraded (torch not installed — algorithmic signals only)",
-        "module4_face": "degraded (insightface/mediapipe optional)",
+        "module4_face": face_status,
         "risk_engine": "active",
         "blockchain": "degraded (sepolia simulated unless INFURA_URL/WALLET_ADDRESS/PRIVATE_KEY set)",
         "audit_chain": "active",

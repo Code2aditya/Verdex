@@ -116,6 +116,16 @@ async def root():
 async def on_startup():
     from backend.db.session import init_db
 
+    # Cap BLAS/torch thread pools: default multi-threading multiplies
+    # peak RSS on small containers (each thread arena costs memory).
+    try:
+        import torch
+
+        torch.set_num_threads(1)
+        torch.set_num_interop_threads(1)
+    except Exception:
+        pass
+
     init_db()
     from backend.audit.chain import get_chain_root
 

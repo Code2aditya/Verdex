@@ -5,6 +5,13 @@ ENV PYTHONUNBUFFERED=1
 # Production inside the image: silences SQLAlchemy echo spam in Railway logs.
 # (Overridable via Railway Variables; local dev keeps development default.)
 ENV APP_ENV=production
+# 1GB-container memory diet: quantized EasyOCR + no InsightFace
+# (face falls back to histogram descriptors, liveness to texture/colour/moiré).
+ENV EASYOCR_QUANTIZE=1
+ENV ENABLE_INSIGHTFACE=0
+# Cap BLAS/OpenMP thread pools — each thread arena costs RSS on small hosts.
+ENV OMP_NUM_THREADS=1
+ENV MKL_NUM_THREADS=1
 
 WORKDIR /app
 

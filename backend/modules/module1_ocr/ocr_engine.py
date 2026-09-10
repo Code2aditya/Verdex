@@ -64,7 +64,13 @@ def get_easyocr_reader(lang: str = "en"):
     lang_list = ["en"]
     if lang == "hi":
         lang_list = ["hi", "en"]
-    return easyocr.Reader(lang_list, gpu=False)
+    try:
+        from backend.config.settings import get_settings
+
+        quantize = bool(get_settings().easyocr_quantize)
+    except Exception:
+        quantize = False
+    return easyocr.Reader(lang_list, gpu=False, quantize=quantize)
 
 
 def lang_for_document_type(document_type: str | None) -> str:

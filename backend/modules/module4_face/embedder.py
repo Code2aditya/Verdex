@@ -22,6 +22,12 @@ def _load_insightface():
     global _INSIGHT
     if _INSIGHT is None:
         try:
+            from backend.config.settings import get_settings
+
+            if not get_settings().enable_insightface:
+                logger.info("InsightFace disabled by ENABLE_INSIGHTFACE=false — using histogram descriptor.")
+                _INSIGHT = False
+                return None
             from insightface.app import FaceAnalysis
 
             app = FaceAnalysis(name="buffalo_l", providers=["CPUExecutionProvider"])

@@ -45,6 +45,15 @@ class Settings(BaseSettings):
     jwt_secret:        str = "change-this-to-a-random-string"
     jwt_expiry_hours:  int = 8
 
+    # ── ML memory budget ──────────────────────────────────────────────────────
+    # InsightFace buffalo_l needs ~500MB RAM on top of torch+EasyOCR and
+    # OOM-kills 1GB containers. Set ENABLE_INSIGHTFACE=false on small
+    # hosts: face matching falls back to histogram descriptors and liveness
+    # to texture/colour/moiré signals (both reported honestly as such).
+    enable_insightface: bool = True
+    # Quantized EasyOCR models: much smaller RAM footprint on CPU hosts.
+    easyocr_quantize:   bool = False
+
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:

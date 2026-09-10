@@ -22,6 +22,11 @@ logger = logging.getLogger(__name__)
 def _insight_app():
     try:
         from functools import lru_cache
+
+        from backend.config.settings import get_settings
+
+        if not get_settings().enable_insightface:
+            return None
         from insightface.app import FaceAnalysis
 
         @lru_cache(maxsize=1)
