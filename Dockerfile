@@ -9,6 +9,8 @@ ENV APP_ENV=production
 # (face falls back to histogram descriptors, liveness to texture/colour/moiré).
 ENV EASYOCR_QUANTIZE=1
 ENV ENABLE_INSIGHTFACE=0
+# Torch-free image: Tesseract serves OCR, so EasyOCR must never be attempted.
+ENV OCR_ENGINE=tesseract
 # Cap BLAS/OpenMP thread pools — each thread arena costs RSS on small hosts.
 ENV OMP_NUM_THREADS=1
 ENV MKL_NUM_THREADS=1
@@ -22,9 +24,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxext6 \
     libxrender-dev \
     libgomp1 \
+    tesseract-ocr \
+    tesseract-ocr-eng \
+    tesseract-ocr-hin \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+COPY requirements-docker.txt requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .

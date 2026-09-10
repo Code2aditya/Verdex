@@ -27,6 +27,7 @@ from backend.modules.module1_ocr.ocr_engine import (
     lang_for_document_type,
     paddle_available,
     run_ocr,
+    tesseract_available,
 )
 
 logger = logging.getLogger(__name__)

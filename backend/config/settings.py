@@ -53,6 +53,9 @@ class Settings(BaseSettings):
     enable_insightface: bool = True
     # Quantized EasyOCR models: much smaller RAM footprint on CPU hosts.
     easyocr_quantize:   bool = False
+    # OCR engine pin: auto (paddle->easyocr->tesseract) or one engine name.
+    # Pin "tesseract" on torch-free hosts so EasyOCR is never attempted.
+    ocr_engine:         str = "auto"
 
 
 @lru_cache(maxsize=1)

@@ -22,17 +22,35 @@ def _flag(name: str, default: str = "0") -> bool:
 def main() -> None:
     quantize = _flag("EASYOCR_QUANTIZE", "0")
     want_insight = _flag("ENABLE_INSIGHTFACE", "1")
+    ocr_pin = os.environ.get("OCR_ENGINE", "auto").strip().lower()
 
     try:
         import easyocr
 
-        print(f"[warmup] downloading EasyOCR models (en, quantize={quantize})...", flush=True)
-        easyocr.Reader(["en"], gpu=False, quantize=quantize)
-        print(f"[warmup] downloading EasyOCR models (hi+en, quantize={quantize})...", flush=True)
-        easyocr.Reader(["hi", "en"], gpu=False, quantize=quantize)
-        print("[warmup] easyocr OK", flush=True)
+        if ocr_pin in ("tess", "tesseract"):
+            print("[warmup] OCR_ENGINE=tesseract — skipping easyocr download.", flush=True)
+        else:
+            print(f"[warmup] downloading EasyOCR models (en, quantize={quantize})...", flush=True)
+            easyocr.Reader(["en"], gpu=False, quantize=quantize)
+            print(f"[warmup] downloading EasyOCR models (hi+en, quantize={quantize})...", flush=True)
+            easyocr.Reader(["hi", "en"], gpu=False, quantize=quantize)
+            print("[warmup] easyocr OK", flush=True)
+    except ImportError:
+        print("[warmup] easyocr not installed — skipping.", flush=True)
     except Exception:
         print("[warmup] easyocr warmup FAILED, runtime fallback remains:", flush=True)
+        traceback.print_exc()
+
+    try:
+        import pytesseract
+
+        print("[warmup] verifying tesseract binary + language packs...", flush=True)
+        print("[warmup] tesseract version:", pytesseract.get_tesseract_version(), flush=True)
+        print("[warmup] tesseract langs:", sorted(pytesseract.get_languages()), flush=True)
+    except ImportError:
+        print("[warmup] pytesseract not installed — skipping.", flush=True)
+    except Exception:
+        print("[warmup] tesseract warmup FAILED, runtime fallback remains:", flush=True)
         traceback.print_exc()
 
     if not want_insight:
@@ -46,6 +64,8 @@ def main() -> None:
         app = FaceAnalysis(name="buffalo_l", providers=["CPUExecutionProvider"])
         app.prepare(ctx_id=-1, det_size=(640, 640))
         print("[warmup] insightface OK", flush=True)
+    except ImportError:
+        print("[warmup] insightface not installed — skipping.", flush=True)
     except Exception:
         print("[warmup] insightface warmup FAILED, runtime fallback remains:", flush=True)
         traceback.print_exc()

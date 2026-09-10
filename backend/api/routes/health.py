@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends
 
 from backend.audit.chain import get_chain_root
 from backend.config.rule_loader import supported_document_types
-from backend.modules.module1_ocr import easy_available, paddle_available
+from backend.modules.module1_ocr import easy_available, paddle_available, tesseract_available
 from backend.modules.module2_validation import watchlist_status
 from backend.modules.module3_tampering.tamper_pipeline import _cnn_available
 from backend.security.offline_queue import OfflineQueue
@@ -26,6 +26,8 @@ def _module_status() -> dict[str, str]:
     elif easy_available():
         quant = "quantized" if settings.easyocr_quantize else "full"
         ocr_status = f"active (easyocr {quant})"
+    elif tesseract_available():
+        ocr_status = "active (tesseract)"
     else:
         ocr_status = "degraded (no OCR engine installed)"
     face_status = (

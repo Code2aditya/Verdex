@@ -1,0 +1,29 @@
+# requirements-docker.txt — slim deploy set for 1GB containers.
+# Deliberately OMITS the torch stack (torch/torchvision/easyocr) and
+# InsightFace/onnxruntime: together they exceed 1GB RSS and the platform
+# SIGKILLs the process on first verify. OCR is served by the Tesseract
+# native binary (pytesseract); tamper CNN degrades to ELA/noise/QR signals;
+# face matching falls back to histogram descriptors. All degradations are
+# reported honestly in API responses. Local dev keeps requirements.txt.
+numpy>=1.24
+scipy>=1.11
+Pillow>=10.0
+opencv-python>=4.8
+pytesseract>=0.3
+zxing-cpp>=2.2
+
+# ── Backend / API ─────────────────────────────────────────
+fastapi>=0.104
+uvicorn[standard]>=0.24
+pydantic>=2.0
+pydantic-settings>=2.0
+python-multipart>=0.0.6
+httpx>=0.25
+sqlalchemy>=2.0
+PyYAML>=6.0
+python-dateutil>=2.8
+
+# ── Blockchain & Security ─────────────────────────────────
+web3>=6.0        # only used for LIVE Sepolia anchoring (optional)
+pyjwt>=2.8
+cryptography>=41.0
