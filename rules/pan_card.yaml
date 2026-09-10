@@ -1,0 +1,36 @@
+document_type: pan_card
+version: 1
+description: >
+  Indian Permanent Account Number (PAN) card issued by the Income Tax
+  Department. No MRZ. The 10-character PAN uses a check-character
+  algorithm over the first nine characters.
+
+fields:
+  - name: pan_number
+    source: visual
+    required: true
+    format_regex: "^[A-Z]{5}[0-9]{4}[A-Z]$"
+    checksum: pan_char
+  - name: full_name
+    source: visual
+    required: true
+  - name: father_name
+    source: visual
+    required: true
+  - name: date_of_birth
+    source: visual
+    required: true
+    format: "YYYY-MM-DD"
+  - name: signature
+    source: visual
+    required: false
+
+mrz:
+  present: false
+
+date_logic:
+  - "date_of_birth <= today"
+
+cross_field_checks: []
+
+script: latin

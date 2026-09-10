@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - WATCHLIST_DB_PATH=/app/data/watchlist.db
+      - AUDIT_DB_PATH=/app/data/audit.db
+      - JWT_SECRET=change-this-to-a-real-secret
+      - WEB3_RPC_URL=
+      - WEB3_PRIVATE_KEY=
+    volumes:
+      - app-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  app-data:

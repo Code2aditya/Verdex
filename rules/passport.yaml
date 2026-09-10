@@ -1,0 +1,57 @@
+document_type: passport
+version: 1
+description: >
+  ICAO-standardized Indian passport with MRZ (2-line, TD3 format).
+
+fields:
+  - name: full_name
+    source: mrz_and_visual
+    required: true
+  - name: passport_number
+    source: mrz_and_visual
+    required: true
+    format_regex: "^[A-Z0-9]{6,9}$"
+  - name: nationality
+    source: mrz_and_visual
+    required: true
+  - name: date_of_birth
+    source: mrz_and_visual
+    required: true
+    format: "YYYY-MM-DD"
+  - name: date_of_issue
+    source: visual
+    required: true
+    format: "YYYY-MM-DD"
+  - name: date_of_expiry
+    source: mrz_and_visual
+    required: true
+    format: "YYYY-MM-DD"
+  - name: gender
+    source: mrz_and_visual
+    required: true
+    allowed_values: ["M", "F", "X"]
+  - name: place_of_birth
+    source: visual
+    required: false
+  - name: mrz_raw
+    source: mrz
+    required: true
+
+mrz:
+  present: true
+  format: TD3          # 2 lines x 44 chars
+  lines: 2
+  line_length: 44
+  checksum_fields: [passport_number, date_of_birth, date_of_expiry, personal_number]
+
+date_logic:
+  - "date_of_birth < date_of_issue"
+  - "date_of_issue < date_of_expiry"
+  - "date_of_issue <= today"
+
+cross_field_checks:
+  - "mrz.passport_number == visual.passport_number"
+  - "mrz.date_of_birth == visual.date_of_birth"
+  - "mrz.date_of_expiry == visual.date_of_expiry"
+
+script: latin

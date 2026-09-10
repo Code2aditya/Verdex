@@ -1,0 +1,47 @@
+document_type: driving_licence
+version: 1
+description: >
+  Indian Driving Licence (DL). No MRZ.
+
+fields:
+  - name: dl_number
+    source: visual
+    required: true
+    format_regex: "^[A-Z]{2}[0-9]{2}[0-9 ]{11,13}$"
+  - name: full_name
+    source: visual
+    required: true
+  - name: date_of_birth
+    source: visual
+    required: true
+    format: "YYYY-MM-DD"
+  - name: date_of_issue
+    source: visual
+    required: true
+    format: "YYYY-MM-DD"
+  - name: date_of_expiry
+    source: visual
+    required: true
+    format: "YYYY-MM-DD"
+  - name: vehicle_classes
+    source: visual
+    required: true
+    description: "e.g. MCWG, LMV, HMV"
+  - name: address
+    source: visual
+    required: true
+  - name: issuing_authority
+    source: visual
+    required: true
+
+mrz:
+  present: false
+
+date_logic:
+  - "date_of_birth < date_of_issue"
+  - "date_of_issue < date_of_expiry"
+  - "date_of_issue <= today"
+
+cross_field_checks: []
+
+script: devanagari_latin_mixed

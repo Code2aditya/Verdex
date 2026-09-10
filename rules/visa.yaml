@@ -1,0 +1,48 @@
+document_type: visa
+version: 1
+description: >
+  Visa sticker/stamp inserted into a passport. No independent MRZ in
+  most Indian-issued visas; cross-checked against the host passport.
+
+fields:
+  - name: visa_number
+    source: visual
+    required: true
+    format_regex: "^[A-Z0-9]{6,12}$"
+  - name: visa_type
+    source: visual
+    required: true
+    allowed_values: ["single", "multiple", "transit", "tourist", "business", "diplomatic"]
+  - name: entry_type
+    source: visual
+    required: true
+    allowed_values: ["single", "multiple"]
+  - name: stay_duration_days
+    source: visual
+    required: true
+  - name: validity_start
+    source: visual
+    required: true
+    format: "YYYY-MM-DD"
+  - name: validity_end
+    source: visual
+    required: true
+    format: "YYYY-MM-DD"
+  - name: issuing_country
+    source: visual
+    required: true
+  - name: issuing_authority
+    source: visual
+    required: false
+
+mrz:
+  present: false
+
+date_logic:
+  - "validity_start < validity_end"
+  - "validity_start <= today"
+
+cross_field_checks:
+  - "visa.passport_number == host_passport.passport_number"
+
+script: latin

@@ -1,0 +1,46 @@
+document_type: voter_id
+version: 1
+description: >
+  Indian Electoral Photo Identity Card (EPIC). No MRZ. Accepted as a
+  primary identity document by the Election Commission.
+
+fields:
+  - name: epic_number
+    source: visual
+    required: true
+    format_regex: "^[A-Z]{3}[0-9]{7}$"
+  - name: full_name
+    source: visual
+    required: true
+  - name: relative_name
+    source: visual
+    required: true
+    description: "Father's / Husband's name"
+  - name: date_of_birth
+    source: visual
+    required: false
+    format: "YYYY-MM-DD"
+  - name: age
+    source: visual
+    required: false
+    description: "Some EPIC cards show age instead of DOB"
+  - name: gender
+    source: visual
+    required: true
+    allowed_values: ["M", "F", "X"]
+  - name: address
+    source: visual
+    required: true
+  - name: polling_booth
+    source: visual
+    required: false
+
+mrz:
+  present: false
+
+date_logic:
+  - "date_of_birth <= today"
+
+cross_field_checks: []
+
+script: devanagari_latin_mixed

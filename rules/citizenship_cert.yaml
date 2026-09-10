@@ -1,0 +1,38 @@
+document_type: citizenship_certificate
+version: 1
+description: >
+  Nepali/Bhutanese citizenship certificate. No MRZ. Key alternate-ID
+  document at SSB open-border checkpoints per project scope note (2.2).
+
+fields:
+  - name: certificate_number
+    source: visual
+    required: true
+  - name: full_name
+    source: visual
+    required: true
+  - name: date_of_birth
+    source: visual
+    required: true
+    format: "YYYY-MM-DD"
+  - name: address
+    source: visual
+    required: true
+  - name: issuing_authority
+    source: visual
+    required: true
+  - name: date_of_issue
+    source: visual
+    required: true
+    format: "YYYY-MM-DD"
+
+mrz:
+  present: false
+
+date_logic:
+  - "date_of_birth < date_of_issue"
+  - "date_of_issue <= today"
+
+cross_field_checks: []
+
+script: devanagari

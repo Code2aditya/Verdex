@@ -1,0 +1,41 @@
+document_type: aadhaar
+version: 1
+description: >
+  Indian UIDAI Aadhaar card. No MRZ. 12-digit Aadhaar number uses a
+  Verhoeff checksum (not ICAO 9303) - handled separately from the
+  MRZ validator.
+
+fields:
+  - name: aadhaar_number
+    source: visual
+    required: true
+    format_regex: "^[0-9]{4} [0-9]{4} [0-9]{4}$"
+    checksum: verhoeff
+  - name: full_name
+    source: visual
+    required: true
+  - name: date_of_birth
+    source: visual
+    required: true
+    format: "YYYY-MM-DD"
+  - name: gender
+    source: visual
+    required: true
+    allowed_values: ["M", "F", "T"]
+  - name: address
+    source: visual
+    required: true
+  - name: vid
+    source: visual
+    required: false
+    description: "Virtual ID, if present on the card"
+
+mrz:
+  present: false
+
+date_logic:
+  - "date_of_birth <= today"
+
+cross_field_checks: []
+
+script: devanagari_latin_mixed

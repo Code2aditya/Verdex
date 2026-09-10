@@ -1,0 +1,50 @@
+# ── Core ML (CPU-only for production) ──────────────────────
+torch>=2.0
+torchvision>=0.15
+onnxruntime>=1.16
+
+# ── OCR (Module 1) ─────────────────────────────────────────
+paddleocr>=2.7
+paddlepaddle>=2.5
+easyocr>=1.7
+passporteye>=2.2
+mrz>=0.6
+
+# ── Tampering Detection (Module 3) ─────────────────────────
+opencv-python>=4.8
+Pillow>=10.0
+zxing-cpp>=2.2
+scikit-image>=0.21
+grad-cam>=1.4
+
+# ── Face Verification (Module 4) ───────────────────────────
+insightface>=0.7
+deepface>=0.0.79
+mediapipe>=0.10
+
+# ── Backend / API ──────────────────────────────────────────
+fastapi>=0.104
+uvicorn[standard]>=0.24
+pydantic>=2.0
+sqlalchemy>=2.0
+alembic>=1.12
+aiofiles>=23.0
+httpx>=0.25
+python-multipart>=0.0.6
+psycopg2-binary>=2.9
+pgvector>=0.2
+redis>=5.0
+
+# ── Blockchain & Security ─────────────────────────────────
+web3>=6.0
+pyjwt>=2.8
+cryptography>=41.0
+sqlcipher3>=26.0
+
+# ── Utilities ──────────────────────────────────────────────
+PyYAML>=6.0
+python-dotenv>=1.0
+python-dateutil>=2.8
+requests>=2.31
+numpy>=1.24
+scipy>=1.11
