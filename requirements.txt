@@ -1,50 +1,38 @@
-# ── Core ML (CPU-only for production) ──────────────────────
+# ── Core ML (CPU-only) ───────────────────────────────────
+numpy>=1.24
+scipy>=1.11
+Pillow>=10.0
+opencv-python>=4.8
+
+# ── OCR (Module 1) — EasyOCR primary, PaddleOCR optional ─
+easyocr>=1.7
+# paddleocr / paddlepaddle deliberately OMITTED: adds ~2GB and
+# unreliable wheels on slim images. EasyOCR is the working engine.
+
+# ── Tampering Detection (Module 3) ────────────────────────
 torch>=2.0
 torchvision>=0.15
-onnxruntime>=1.16
-
-# ── OCR (Module 1) ─────────────────────────────────────────
-paddleocr>=2.7
-paddlepaddle>=2.5
-easyocr>=1.7
-passporteye>=2.2
-mrz>=0.6
-
-# ── Tampering Detection (Module 3) ─────────────────────────
-opencv-python>=4.8
-Pillow>=10.0
 zxing-cpp>=2.2
-scikit-image>=0.21
-grad-cam>=1.4
 
-# ── Face Verification (Module 4) ───────────────────────────
+# ── Face Verification (Module 4) — InsightFace primary ───
+onnxruntime
 insightface>=0.7
-deepface>=0.0.79
-mediapipe>=0.10
+# mediapipe / deepface OMITTED: InsightFace 3D landmarks drive
+# both geometry-based liveness and face embedding; no other
+# model is required by the pipeline.
 
-# ── Backend / API ──────────────────────────────────────────
+# ── Backend / API ─────────────────────────────────────────
 fastapi>=0.104
 uvicorn[standard]>=0.24
 pydantic>=2.0
-sqlalchemy>=2.0
-alembic>=1.12
-aiofiles>=23.0
-httpx>=0.25
+pydantic-settings>=2.0
 python-multipart>=0.0.6
-psycopg2-binary>=2.9
-pgvector>=0.2
-redis>=5.0
+httpx>=0.25
+sqlalchemy>=2.0
+PyYAML>=6.0
+python-dateutil>=2.8
 
 # ── Blockchain & Security ─────────────────────────────────
-web3>=6.0
+web3>=6.0        # only used for LIVE Sepolia anchoring (optional)
 pyjwt>=2.8
 cryptography>=41.0
-sqlcipher3>=0.6.2
-
-# ── Utilities ──────────────────────────────────────────────
-PyYAML>=6.0
-python-dotenv>=1.0
-python-dateutil>=2.8
-requests>=2.31
-numpy>=1.24
-scipy>=1.11
